@@ -11,3 +11,4 @@ export 'add_money/add_money_screen.dart';
 export 'bank_transfer/bank_transfer_screen.dart';
 export 'id_transfer/id_transfer_screen.dart';
 export 'frame/frame_screen.dart';
+export 'connect/connect_screen.dart';

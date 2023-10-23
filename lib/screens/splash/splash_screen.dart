@@ -20,11 +20,53 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToLoginAfterDelay();
+    _showTransactionOptions();
+    //_navigateToLoginAfterDelay();
+  }
+  Future<void> _showTransactionOptions() async {
+
+    await Future.delayed(const Duration(seconds: 5)); // Wait for 5 seconds
+
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
+
+
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Transaction Mode'),
+          content: const Text('Choose the transaction mode:'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _navigateToConnectScreen();
+              },
+              child: const Text('Offline'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _navigateToLoginAfterDelay();
+              },
+              child: const Text('Online'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  Future<void> _navigateToLoginAfterDelay() async {
-    await Future.delayed(const Duration(seconds: 5)); // Wait for 3 seconds
+  void _navigateToConnectScreen() {
+    Navigator.pushNamed(context, '/connect'); // Navigate to the ConnectScreen
+
+
+  }
+
+
+  void _navigateToLoginAfterDelay() {
 
     Navigator.pushNamed(context, '/load1'); // Navigate to the login screen
   }

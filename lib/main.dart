@@ -6,6 +6,7 @@ import 'package:qrpay/screens/login/login_screen.dart';
 import 'package:qrpay/screens/screens.dart';
 import 'package:qrpay/screens/splash/splash_screen.dart';
 import 'package:qrpay/screens/add_card/add_card_screen.dart';
+import 'package:qrpay/screens/connect/connect_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -17,17 +18,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       onGenerateRoute: AppRouter.onGenerateRoute,
-      initialRoute: AddCardScreen.routeName,
+      initialRoute: SplashScreen.routeName,
     );
   }
 }
-
-
-
-
