@@ -86,8 +86,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  flutter_p2p_plus:
+    dependency: "direct main"
+    description:
+      name: flutter_p2p_plus
+      sha256: "1cc033e6f2b8b2f2985f41e9bef62ed74a62e775beb7777431a5884b5e0b7ee1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   flutter_test:
     dependency: "direct dev"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -151,10 +164,10 @@ packages:
     dependency: "direct main"
     description:
       name: protobuf
-      sha256: "68645b24e0716782e58948f8467fd42a880f255096a821f9e7d0ec625b00c84d"
+      sha256: "01dd9bd0fa02548bf2ceee13545d4a0ec6046459d847b6b061d8a27237108a08"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "2.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -234,3 +247,4 @@ packages:
     version: "0.1.4-beta"
 sdks:
   dart: ">=3.1.2 <4.0.0"
+  flutter: ">=2.5.0"

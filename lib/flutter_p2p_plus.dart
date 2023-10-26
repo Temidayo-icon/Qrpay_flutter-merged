@@ -1,10 +1,16 @@
-library flutter_p2p;
+library flutter_p2p_plus;
 
-import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:async';
+
+
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_p2p_plus/flutter_p2p_plus.dart';
+import 'package:qrpay/gen/protos/protos.pb.dart';
+
+import 'dart:convert';
+import 'dart:typed_data';
 import 'gen/protos/protos.pb.dart';
 
 part 'broadcast_handler.dart';
