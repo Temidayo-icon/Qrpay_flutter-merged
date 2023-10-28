@@ -3,13 +3,45 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_p2p_plus/flutter_p2p_plus.dart';
 import 'package:flutter_p2p_plus/protos/protos.pb.dart';
+import 'package:qrpay/screens/connect/connect_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 
 
 import '../../main.dart';
+class Packet {
+  String? data;
+  int? timestamp;
 
-class ConnectScreen extends StatelessWidget {
+  Packet({this.data, this.timestamp});
+
+  Packet.fromJson(Map<String, dynamic> json) {
+    data = json['data'];
+    timestamp = json['timestamp'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['data'] = this.data;
+    data['timestamp'] = timestamp;
+    return data;
+  }
+}
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: ConnectScreen(),
+    );
+  }
+}
+
+class ConnectScreen extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
   const ConnectScreen({super.key});
@@ -32,16 +64,25 @@ class ConnectScreen extends StatelessWidget {
     );
   }
 }
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends State<ConnectScreen> with WidgetsBindingObserver {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var _deviceAddress = "";
   var _isConnected = false;
   var _isHost = false;
   var _isOpen = false;
+  var _socketClientConnected = false;
+  String _sendText = "";
+  String _rcvText = "";
 
   P2pSocket? _socket;
+  WifiP2pDevice? _wifiP2pDevice;
   List<WifiP2pDevice> devices = [];
   final List<StreamSubscription> _subscriptions = [];
+  final TextEditingController _textEditingController = TextEditingController();
+  final FlutterP2pPlus _flutterP2pPlus = FlutterP2pPlus();
+  StreamSubscription? _socketInputStreamSubscription;
+  StreamSubscription? _socketStateStreamSubscription;
+
 
   @override
   void initState() {
@@ -53,9 +94,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _socketInputStreamSubscription?.cancel();
+    _socketStateStreamSubscription?.cancel();
     FlutterP2pPlus.removeGroup();
     for (var element in _subscriptions) {
       element.cancel();
+    }
+    if (_isConnected) {
+      if (_wifiP2pDevice != null) {
+        FlutterP2pPlus.cancelConnect(_wifiP2pDevice!);
+      }
     }
     super.dispose();
   }
@@ -111,6 +159,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void _unregister() {
+    _socketInputStreamSubscription?.cancel();
     for (var subscription in _subscriptions) {
       subscription.cancel();
     }
@@ -149,16 +198,64 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
 
     setState(() {
+      _socketClientConnected = true;
       _socket = socket;
     });
+    await _socketInputStreamSubscription?.cancel();
+    _socketInputStreamSubscription = null;
+    await _socketStateStreamSubscription?.cancel();
+    _socketStateStreamSubscription = null;
 
-    _socket?.inputStream.listen((data) {
+    _socketInputStreamSubscription ??= _socket?.inputStream.listen((data) {
       var msg = utf8.decode(data.data);
-      snackBar("Received from ${_isHost ? "Host" : "Client"} $msg");
+      setState(() {
+        _rcvText += "$msg \n";
+      });
+      // snackBar("Received from ${_isHost ? "Host" : "Client"} $msg");
     });
+
+
+
+    /*_socketStateStreamSubscription ??= _socket?.stateStream.listen((event) {
+      debugPrint("[Listen] Socket State: $event");
+      setState(() {
+        _socketClientConnected = false;
+      });
+      showDialog(
+          context: context,
+          builder: (context) => const AlertDialog(
+            content: Text("Socket Host Disconnected"),
+          ));
+    })*/
 
     debugPrint("_connectToPort done");
   }
+  Future<bool?> _socketDisconnect() async {
+    bool result = false;
+    if (_isHost) {
+      await FlutterP2pPlus.closeHostPort(8000);
+    } else {
+      await FlutterP2pPlus.disconnectFromHost(8000);
+    }
+    _socketInputStreamSubscription?.cancel();
+    _socketInputStreamSubscription = null;
+    setState(() {
+      _socketClientConnected = false;
+    });
+    // if (_wifiP2pDevice != null) {
+    //   result = await FlutterP2pPlus.cancelConnect(_wifiP2pDevice!) ?? false;
+    // }
+
+    return result;
+  }
+  Future<bool?> _teardown() async {
+    bool? result = await FlutterP2pPlus.removeGroup();
+    _unregister();
+    _socket = null;
+    if ((result ?? false)) _isOpen = false;
+    return result;
+  }
+
 
   Future<bool> _checkPermission() async {
     // if (!await FlutterP2pPlus?.isLocationPermissionGranted()) {
@@ -224,7 +321,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       },
                     ),
                   ),
-                  VerticalDivider(
+                  const VerticalDivider(
                     color: Colors.grey,
                   ),
                   Expanded(

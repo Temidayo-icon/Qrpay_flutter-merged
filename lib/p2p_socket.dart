@@ -3,12 +3,13 @@ part of 'flutter_p2p_plus.dart';
 class P2pSocket {
   final bool isHost;
   final int port;
-  final Stream<SocketMessage> _inputStream;
   final Stream<SocketState> _stateStream;
+  final Stream<SocketMessage> _inputStream;
 
 
+  Stream<SocketState>   get stateStream => _stateStream;
   Stream<SocketMessage> get inputStream => _inputStream;
-  Stream<SocketState> get stateStream => _stateStream;
+
 
   P2pSocket(this.port, this.isHost, this._inputStream, this._stateStream);
 
@@ -17,7 +18,6 @@ class P2pSocket {
   }
 
   Future<Future<bool?>> writeString(String text) {
-    Uint8List bytes = Uint8List(text as int);
-    return write(bytes);
+    return write(utf8.encode(text) as Uint8List);
   }
 }
