@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_p2p_plus/flutter_p2p_plus.dart';
 import 'package:flutter_p2p_plus/protos/protos.pb.dart';
-import 'package:qrpay/screens/connect/connect_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../scan_qr/scanqr.dart';
 
 
-import '../../main.dart';
+
 class Packet {
   String? data;
   int? timestamp;
@@ -228,6 +228,19 @@ class _MyAppState extends State<ConnectScreen> with WidgetsBindingObserver {
           ));
     })*/
 
+    debugPrint("_connectToPort done");
+
+    // If the connection is successful, navigate to the ScanBarcodeScreen
+    if (_socketClientConnected && _isHost) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScanBarcodeScreen()),
+      );
+    }
+    else {
+      // Navigate to the "GenerateBarcodeScreen" when you are the client
+      Navigator.pushNamed(context, '/generateBarcode');
+    }
     debugPrint("_connectToPort done");
   }
   Future<bool?> _socketDisconnect() async {
