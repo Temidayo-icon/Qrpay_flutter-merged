@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       onGenerateRoute: AppRouter.onGenerateRoute,
       initialRoute: SplashScreen.routeName,
+
     );
   }
 }

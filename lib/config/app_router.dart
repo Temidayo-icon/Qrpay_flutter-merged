@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:qrpay/screens/connect/connect_screen.dart';
 import 'package:qrpay/screens/loading/load1_screen.dart';
 import 'package:qrpay/screens/loading/load2_screen.dart';
 import 'package:qrpay/screens/loading/load3_screen.dart';
 import 'package:qrpay/screens/loading/load4_screen.dart';
 import 'package:qrpay/screens/home/home_screen.dart';
 import 'package:qrpay/screens/login/login_screen.dart';
+import 'package:qrpay/screens/scan_qr/scanqr.dart';
 import 'package:qrpay/screens/signup/signup_screen.dart';
 import 'package:qrpay/screens/splash/splash_screen.dart';
 import 'package:qrpay/screens/add_card/add_card_screen.dart';
@@ -50,6 +52,10 @@ class AppRouter {
         return ProfileScreen.route();
       case FrameScreen.routeName:
         return FrameScreen.route();
+      case ConnectScreen.routeName:
+        return ConnectScreen.route();
+      case ScanBarcodeScreen.routeName:
+        return ScanBarcodeScreen.route();
 
 
         break;
