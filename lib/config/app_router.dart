@@ -16,6 +16,9 @@ import 'package:qrpay/screens/bank_transfer/bank_transfer_screen.dart';
 import 'package:qrpay/screens/id_transfer/id_transfer_screen.dart';
 import 'package:qrpay/screens/profile/profile_screen.dart';
 import 'package:qrpay/screens/frame/frame_screen.dart';
+import 'package:qrpay/screens/generate_qr/generateqr.dart';
+
+
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -56,9 +59,10 @@ class AppRouter {
         return ConnectScreen.route();
       case ScanBarcodeScreen.routeName:
         return ScanBarcodeScreen.route();
+      case GenBarcodeScreen.routeName:
+        return GenBarcodeScreen.route();
 
 
-        break;
       default:
         return _errorRoute();
     }

@@ -6,15 +6,15 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 
 class GenBarcodeScreen extends StatefulWidget {
-  final String myQR;
-  const GenBarcodeScreen(this.myQR, {super.key});
+
+  const GenBarcodeScreen( {super.key});
 
 
   static const String routeName = '/generateBarcode';
 
-  Route route() {
+   static Route route() {
     return MaterialPageRoute(
-      builder: (_) =>  GenBarcodeScreen(myQR),
+      builder: (_) =>  GenBarcodeScreen(),
       settings: const RouteSettings(name: routeName),
     );
   }
